@@ -451,7 +451,8 @@ process_src_file_lastmod(undefined, _Other, _) ->
 
 
 erlydtl_compile(SrcFile, Options) ->
-    erlydtl:compile(SrcFile, list_to_atom(lists:flatten(filename:basename(SrcFile, ".dtl") ++ "_dtl")), Options).
+    BaseOpts = application:get_env(sync, erlydtl_options, []),
+    erlydtl:compile(SrcFile, list_to_atom(lists:flatten(filename:basename(SrcFile, ".dtl") ++ "_dtl")), Options ++ BaseOpts).
 
 maybe_recompile_src_file(File, LastMod, EnablePatching) ->
     Module = list_to_atom(filename:basename(File, ".erl")),
