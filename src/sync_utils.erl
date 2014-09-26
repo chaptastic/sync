@@ -24,7 +24,14 @@ get_src_dir_from_module(Module)->
                 BaseSource = proplists:get_value(source, Props, ""),
 
                 Source = case is_erlydtl_template(Module) of
-                             true -> string:substr(BaseSource, 1, string:rstr(BaseSource, ".erl")-1);
+                             true ->
+                                 ErlIdx = string:rstr(BaseSource, ".erl"),
+                                 case ErlIdx /= 0 of
+                                     true ->
+                                         string:substr(BaseSource, 1, ErlIdx - 1);
+                                     false ->
+                                         BaseSource
+                                 end;
                              false -> BaseSource
                          end,
 
