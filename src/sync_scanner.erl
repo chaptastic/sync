@@ -452,6 +452,12 @@ process_src_file_lastmod(undefined, _Other, _) ->
 
 erlydtl_compile(SrcFile, Options) ->
     BaseOpts = application:get_env(sync, erlydtl_options, []),
+    %% Avoid deprecated option warning from erlydtl
+    NewOpts = case lists:keyfind(outdir, 1, Options) of
+                  {outdir, Dir} ->
+                      lists:keyreplace(outdir, 1, Options, {out_dir, Dir});
+                  false -> Options
+              end,
     erlydtl:compile(SrcFile, list_to_atom(lists:flatten(filename:basename(SrcFile, ".dtl") ++ "_dtl")), Options ++ BaseOpts).
 
 maybe_recompile_src_file(File, LastMod, EnablePatching) ->
